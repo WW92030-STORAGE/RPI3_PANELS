@@ -12,12 +12,12 @@ So your project structure should be like
 
 ----HOW TO RUN THE DEMOS FROM THE BASE REPO
 
-cd ~/MATRICES/rpi-rgb-led-matrix/examples-api-use
+cd /path/to/examples-api-use
 sudo ./demo -D0 --led-no-hardware-pulse --led-cols=64
 
 ----HOW TO RUN THE STUFF IN THIS FOLDER
 
-cd ~/MATRICES/rpi-rgb-led-matrix/TEST2
+cd /path/to/TEST2
 sudo ./main --led-no-hardware-pulse --led-cols=128
 
 (do the commands [make clean] and then [make] to run the Makefile which will compile everything)
@@ -28,7 +28,7 @@ It is recommended to make a systemctl/systemd SERVICE that wraps around this cod
 That way you can run this code directly from a single service file call but also so you can have this run on startup.
 
 Command to run the program:
-	sudo /home/wwang/MATRICES/rpi-rgb-led-matrix/TEST2/main --led-no-hardware-pulse --led-cols=128
+	sudo /path/to/main --led-no-hardware-pulse --led-cols=128
 
 How to reach the services folder:
 	cd /etc/systemd/system
