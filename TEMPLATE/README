@@ -28,7 +28,7 @@ It is recommended to make a systemctl/systemd SERVICE that wraps around this cod
 That way you can run this code directly from a single service file call but also so you can have this run on startup.
 
 Command to run the program:
-	sudo /path/to/executable --led-no-hardware-pulse --led-cols=128
+	sudo /home/wwang/MATRICES/rpi-rgb-led-matrix/TEST/main --led-no-hardware-pulse --led-cols=128
 
 How to reach the services folder:
 	cd /etc/systemd/system
