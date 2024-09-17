@@ -55,6 +55,8 @@ double runif(double a, double b) { // Random uniform [a, b)
   return (rng() * (b - a)) + a;
 }
 
+// Colors
+
 std::vector<uint8_t> protogen() {
 	std::vector<uint8_t> res(3, 0);
 	for (int i = 0; i < 3; i++) res.push_back(runif(0, 256));
@@ -67,17 +69,17 @@ std::vector<uint8_t> protogenfullhue() {
 	int pos = runif(0, 6);
 	switch (pos) {
     case 0:
-      res = std::vector<uint8_t>({255, partition, 0});
+      return std::vector<uint8_t>({255, partition, 0});
     case 1:
-      res = std::vector<uint8_t>({255 - partition, 255, 0});
+      return std::vector<uint8_t>({255 - partition, 255, 0});
     case 2:
-      res = std::vector<uint8_t>({0, 255, partition});
+      return std::vector<uint8_t>({0, 255, partition});
     case 3:
-      res = std::vector<uint8_t>({0, 255 - partition, 255});
+      return std::vector<uint8_t>({0, 255 - partition, 255});
     case 4:
-      res = std::vector<uint8_t>({partition, 0, 255});
+      return std::vector<uint8_t>({partition, 0, 255});
     default:
-      res = std::vector<uint8_t>({255, 255 - partition, 0});
+      return std::vector<uint8_t>({255, 255 - partition, 0});
   }
 	return res;
 }
@@ -88,6 +90,12 @@ std::vector<uint8_t> fromint(int x) {
 
 int fromvec(std::vector<uint8_t> color) {
 	return ((color[0])<<16) + ((color[1])<<16) + color[2];
+}
+
+int scale(int color, double sc) {
+  std::vector<uint8_t> v = fromint(color);
+  for (int i = 0; i < v.size(); i++) v[i] = (int)(v[i] * sc);
+  return fromvec(v);
 }
 
 // Displaying outputs
@@ -102,6 +110,39 @@ static void disp(std::vector<std::vector<int>> col, std::vector<std::vector<bool
 	}
   }
 }
+
+static void drawPixel(int x, int y, int color) {
+  std::vector<uint8_t> col = fromint(color);
+  canvas->SetPixel(x, y, col[0], col[1], col[2]);
+}
+
+static void drawLine(int x1, int y1, int x2, int y2, int color) {
+  std::vector<uint8_t> col = fromint(color);
+  for (int i = std::min(x1, x2); i <= std::max(x1, x2); i++) {
+    for (int j = std::min(y1, y2); j <= std::max(y1, y2); j++) canvas->SetPixel(i, j, col[0], col[1], col[2]);
+  }
+}
+
+// The params are a bit misleading -- x2 and y2 are the DIMENSIONS of the rectangle.
+
+static void fillRect(int x1, int y1, int x2, int y2, int color) {
+  x2 += x1;
+  y2 += y1;
+  std::vector<uint8_t> col = fromint(color);
+  for (int i = std::min(x1, x2); i <= std::max(x1, x2); i++) {
+    for (int j = std::min(y1, y2); j <= std::max(y1, y2); j++) canvas->SetPixel(i, j, col[0], col[1], col[2]);
+  }
+}
+
+static void drawRect(int x1, int y1, int x2, int y2, int color) {
+  x2 += x1;
+  y2 += y1;
+  drawLine(x1, y1, x1, y2, color);
+  drawLine(x1, y1, x2, y1, color);
+  drawLine(x1, y2, x2, y2, color);
+  drawLine(x2, y1, x2, y2, color);
+}
+
 
 void delay(int d) {
 	usleep(d * 1000);
