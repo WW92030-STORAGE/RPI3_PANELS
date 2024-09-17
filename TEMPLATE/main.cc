@@ -10,10 +10,10 @@
 #include "stdlib/matrices.h"
 #include "stdlib/panels.h"
 
-#include "include/grid.h"
-
 using rgb_matrix::RGBMatrix;
 using rgb_matrix::Canvas;
+
+// Animation
 
 std::vector<std::vector<std::vector<bool>>> animation{grid0, grid1, grid2, grid3, grid4, grid5, grid6, grid7, grid8};
 int blinkdelay = 0;
@@ -35,6 +35,8 @@ static void anim_loop(int color) {
     playAnimation(col, animation, 20, true);
   }
 }
+
+// MAIN
 
 int main(int argc, char *argv[]) {
   matrixsetup(argc, argv);
