@@ -89,7 +89,7 @@ std::vector<uint8_t> fromint(int x) {
 }
 
 int fromvec(std::vector<uint8_t> color) {
-	return ((color[0])<<16) + ((color[1])<<16) + color[2];
+	return ((color[0])<<16) + ((color[1])<<8) + color[2];
 }
 
 int scale(int color, double sc) {
@@ -116,18 +116,71 @@ static void drawPixel(int x, int y, int color) {
   canvas->SetPixel(x, y, col[0], col[1], col[2]);
 }
 
+// https://www.roguebasin.com/index.php?title=Bresenham%27s_Line_Algorithm
+// Bresenham's algorithm
 static void drawLine(int x1, int y1, int x2, int y2, int color) {
   std::vector<uint8_t> col = fromint(color);
-  for (int i = std::min(x1, x2); i <= std::max(x1, x2); i++) {
-    for (int j = std::min(y1, y2); j <= std::max(y1, y2); j++) canvas->SetPixel(i, j, col[0], col[1], col[2]);
-  }
+    int delta_x(x2 - x1);
+    // if x1 == x2, then it does not matter what we set here
+    signed char const ix((delta_x > 0) - (delta_x < 0));
+    delta_x = std::abs(delta_x) << 1;
+
+    int delta_y(y2 - y1);
+    // if y1 == y2, then it does not matter what we set here
+    signed char const iy((delta_y > 0) - (delta_y < 0));
+    delta_y = std::abs(delta_y) << 1;
+
+    canvas->SetPixel(x1, y1, col[0], col[1], col[2]);
+
+    if (delta_x >= delta_y)
+    {
+        // error may go below zero
+        int error(delta_y - (delta_x >> 1));
+ 
+        while (x1 != x2)
+        {
+            // reduce error, while taking into account the corner case of error == 0
+            if ((error > 0) || (!error && (ix > 0)))
+            {
+                error -= delta_x;
+                y1 += iy;
+            }
+            // else do nothing
+
+            error += delta_y;
+            x1 += ix;
+
+            canvas->SetPixel(x1, y1, col[0], col[1], col[2]);
+        }
+    }
+    else
+    {
+        // error may go below zero
+        int error(delta_x - (delta_y >> 1));
+
+        while (y1 != y2)
+        {
+            // reduce error, while taking into account the corner case of error == 0
+            if ((error > 0) || (!error && (iy > 0)))
+            {
+                error -= delta_y;
+                x1 += ix;
+            }
+            // else do nothing
+
+            error += delta_x;
+            y1 += iy;
+ 
+            canvas->SetPixel(x1, y1, col[0], col[1], col[2]);
+        }
+    }
 }
 
 // The params are a bit misleading -- x2 and y2 are the DIMENSIONS of the rectangle.
 
 static void fillRect(int x1, int y1, int x2, int y2, int color) {
-  x2 += x1;
-  y2 += y1;
+  x2 += x1 - 1;
+  y2 += y1 - 1;
   std::vector<uint8_t> col = fromint(color);
   for (int i = std::min(x1, x2); i <= std::max(x1, x2); i++) {
     for (int j = std::min(y1, y2); j <= std::max(y1, y2); j++) canvas->SetPixel(i, j, col[0], col[1], col[2]);
@@ -135,8 +188,8 @@ static void fillRect(int x1, int y1, int x2, int y2, int color) {
 }
 
 static void drawRect(int x1, int y1, int x2, int y2, int color) {
-  x2 += x1;
-  y2 += y1;
+  x2 += x1 - 1;
+  y2 += y1 - 1;
   drawLine(x1, y1, x1, y2, color);
   drawLine(x1, y1, x2, y1, color);
   drawLine(x1, y2, x2, y2, color);
