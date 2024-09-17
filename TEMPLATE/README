@@ -8,7 +8,7 @@ So your project structure should be like
 (...)/rpi-rgb-led-matrix (outermost folder)
 |
 +-.github, adapter, bindings, etc.
-+-/rpi-rgb-led-matrix/PROJECT (folder that contains the special code and stuff)
++-/rpi-rgb-led-matrix/TEST (folder that contains the special code and stuff)
 
 ----HOW TO RUN THE DEMOS FROM THE BASE REPO
 
@@ -17,7 +17,7 @@ sudo ./demo -D0 --led-no-hardware-pulse --led-cols=64
 
 ----HOW TO RUN THE STUFF IN THIS FOLDER
 
-cd ~/MATRICES/rpi-rgb-led-matrix/THE_WITNESS
+cd ~/MATRICES/rpi-rgb-led-matrix/TEST
 sudo ./main --led-no-hardware-pulse --led-cols=128
 
 (do the commands [make clean] and then [make] to run the Makefile which will compile everything)
@@ -28,7 +28,7 @@ It is recommended to make a systemctl/systemd SERVICE that wraps around this cod
 That way you can run this code directly from a single service file call but also so you can have this run on startup.
 
 Command to run the program:
-	sudo /home/wwang/MATRICES/rpi-rgb-led-matrix/THE_WITNESS/main --led-no-hardware-pulse --led-cols=128
+	sudo /path/to/executable --led-no-hardware-pulse --led-cols=128
 
 How to reach the services folder:
 	cd /etc/systemd/system
