@@ -20,6 +20,8 @@ sudo ./demo -D0 --led-no-hardware-pulse --led-cols=64
 cd ~/MATRICES/rpi-rgb-led-matrix/THE_WITNESS
 sudo ./main --led-no-hardware-pulse --led-cols=128
 
+(do the commands [make clean] and then [make] to run the Makefile which will compile everything)
+
 ----SYSTEMCTL AND SYSTEMD
 
 It is recommended to make a systemctl/systemd SERVICE that wraps around this code. 
