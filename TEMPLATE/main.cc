@@ -10,6 +10,8 @@
 #include "stdlib/matrices.h"
 #include "stdlib/panels.h"
 
+#include "header.h"
+
 using rgb_matrix::RGBMatrix;
 using rgb_matrix::Canvas;
 
@@ -46,6 +48,7 @@ int main(int argc, char *argv[]) {
 
   while (!interrupt_received) {
     // EVERYTHING MEANINGFUL GOES HERE
+    std::cout << fuckaround(14) << "\n";
     anim_loop(0xFFFFFF);
   }
 
